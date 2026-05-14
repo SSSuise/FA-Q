@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企业制造板块+后市场板块 经营管控优化咨询说明书</title>
+    <style>
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent: #c9a227;
+            --accent-light: #e0c87a;
+            --text: #2d3748;
+            --text-light: #718096;
+            --bg: #f7fafc;
+            --bg-card: #ffffff;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 40px 24px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .nav-header {
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 24px;
+        }
+
+        .nav-title {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.4;
+            color: white;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-subtitle {
+            font-size: 12px;
+            color: var(--accent-light);
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 4px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 10px 12px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: white;
+            background: rgba(255,255,255,0.08);
+            border-left-color: var(--accent);
+        }
+
+        .nav-link.sub {
+            padding-left: 28px;
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        /* Main Content */
+        .main {
+            margin-left: 280px;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 80px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(201,162,39,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+
+        .hero-label {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(201,162,39,0.2);
+            color: var(--accent-light);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            border: 1px solid rgba(201,162,39,0.3);
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-desc {
+            font-size: 18px;
+            color: rgba(255,255,255,0.8);
+            max-width: 700px;
+            line-height: 1.6;
+        }
+
+        .content {
+            padding: 60px;
+            max-width: 900px;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 60px;
+            scroll-margin-top: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .section-number {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+            margin-right: 16px;
+            opacity: 0.8;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.3px;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .card p {
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .card p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Lists */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 10px 0;
+            padding-left: 28px;
+            position: relative;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, #fff9e6 0%, #fff5d6 100%);
+            border-left: 4px solid var(--accent);
+            padding: 20px 24px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fee 0%, #ffe0e0 100%);
+            border-left: 4px solid #e53e3e;
+            padding: 20px 24px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+            font-weight: 600;
+            color: #742a2a;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #f0fff4 0%, #e0ffe6 100%);
+            border-left: 4px solid #38a169;
+            padding: 20px 24px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+            font-weight: 600;
+            color: #22543d;
+        }
+
+        /* Formula */
+        .formula {
+            background: var(--primary);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            font-family: "Courier New", monospace;
+            font-size: 15px;
+            margin: 16px 0;
+            overflow-x: auto;
+        }
+
+        .formula-label {
+            font-size: 12px;
+            color: var(--accent-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-family: sans-serif;
+        }
+
+        /* Grid */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+        }
+
+        /* Tags */
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(201,162,39,0.1);
+            color: var(--accent);
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(201,162,39,0.2);
+        }
+
+        /* Summary Section Special Styles */
+        .summary-card {
+            background: linear-gradient(135deg, #fffdf5 0%, #fff9e6 100%);
+            border: 2px solid var(--accent);
+            color: var(--text);
+        }
+
+        .summary-card p {
+            color: var(--text);
+        }
+
+        .summary-inner-box {
+            background: #fff;
+            border: 2px solid var(--accent);
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .summary-inner-box .inner-title {
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 12px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .summary-inner-box p {
+            color: var(--text);
+            margin: 0;
+        }
+
+        /* Table of contents mobile */
+        .mobile-toc {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .nav {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            .nav.open {
+                transform: translateX(0);
+            }
+            .main {
+                margin-left: 0;
+            }
+            .content {
+                padding: 40px 24px;
+            }
+            .hero {
+                padding: 60px 24px;
+            }
+            .hero h1 {
+                font-size: 32px;
+            }
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            .mobile-toc {
+                display: block;
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 200;
+                background: var(--primary);
+                color: white;
+                border: none;
+                padding: 12px 16px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 14px;
+                box-shadow: var(--shadow-lg);
+            }
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Print */
+        @media print {
+            .nav {
+                display: none;
+            }
+            .main {
+                margin-left: 0;
+            }
+            .card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="mobile-toc" onclick="document.querySelector('.nav').classList.toggle('open')">目录</button>
+
+    <nav class="nav">
+        <div class="nav-header">
+            <div class="nav-title">经营管控优化咨询说明书</div>
+            <div class="nav-subtitle">Enterprise Management</div>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="#overview" class="nav-link">一、项目概述</a></li>
+            <li class="nav-item"><a href="#diagnosis" class="nav-link">二、企业现状深度诊断</a></li>
+            <li class="nav-item"><a href="#manufacturing" class="nav-link">三、生产制造中心管控优化</a></li>
+            <li class="nav-item"><a href="#cost" class="nav-link sub">3.2 成本性态划分</a></li>
+            <li class="nav-item"><a href="#pricing" class="nav-link sub">3.4 基准工时定价</a></li>
+            <li class="nav-item"><a href="#kpi" class="nav-link sub">3.5 四大核心指标</a></li>
+            <li class="nav-item"><a href="#strategy" class="nav-link sub">3.7 战略生存路径</a></li>
+            <li class="nav-item"><a href="#aftermarket" class="nav-link">四、客服维保中心管控优化</a></li>
+            <li class="nav-item"><a href="#warranty" class="nav-link sub">4.1 免费质保售后</a></li>
+            <li class="nav-item"><a href="#valueadd" class="nav-link sub">4.2 增值付费售后</a></li>
+            <li class="nav-item"><a href="#methodology" class="nav-link">五、财务分析体系与方法论</a></li>
+            <li class="nav-item"><a href="#implementation" class="nav-link">六、落地实施建议</a></li>
+            <li class="nav-item"><a href="#summary" class="nav-link">七、咨询总结</a></li>
+        </ul>
+    </nav>
+
+    <main class="main">
+        <div class="hero">
+            <div class="hero-content">
+                <div class="hero-label">经营管控优化咨询</div>
+                <h1>企业制造板块 + 后市场板块<br>经营管控优化咨询说明书</h1>
+                <p class="hero-desc">非标智能装备制造行业 · 双板块核算重构 · 战略路径规划<br>还原真实经营结果 · 切割部门权责 · 建立适配周期与资产结构的评价模型</p>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- 第一章 -->
+            <section class="section" id="overview">
+                <div class="section-header">
+                    <div class="section-number">01</div>
+                    <div>
+                        <div class="section-title">项目概述</div>
+                        <div class="section-subtitle">Project Overview</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">1.1 咨询背景</div>
+                    <p>本企业属于<strong>非标智能装备制造行业</strong>，业务模式以销定产、来料加工属性极强；原材料采购成本占总成本比重极高，制造端无原材料定价权。企业资产结构偏不动产重资产，土地使用权、厂房建筑物摊销折旧占固定资产绝大部分，生产加工设备投入偏低，生产模式偏向人工密集组装。</p>
+                    <p>行业具备明确<strong>3年周期性特征</strong>，当前行业由增量规模红利时代转入存量内卷竞争时代，企业原有成本核算、内部考核、经营评价体系出现严重失真，部门权责混淆、指标无法对标、经营结果无法真实反映业务价值。</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">1.2 咨询范围</div>
+                    <p>本次咨询覆盖两大经营板块：</p>
+                    <div style="display: flex; gap: 16px; margin-top: 16px;">
+                        <div style="flex: 1; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 24px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">生产制造中心</div>
+                            <div style="font-size: 13px; opacity: 0.8;">Manufacturing Center</div>
+                        </div>
+                        <div style="flex: 1; background: linear-gradient(135deg, #744210, #975a16); color: white; padding: 24px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">客服维保中心</div>
+                            <div style="font-size: 13px; opacity: 0.8;">Aftermarket Service</div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 16px;">重构双板块核算逻辑、权责边界、指标体系、评价模型；统一会计口径与管理口径双轨制度；明确企业中长期战略发展路径。</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">1.3 咨询目标</div>
+                    <ul class="feature-list">
+                        <li>剔除会计账务噪音，还原真实经营结果</li>
+                        <li>切割部门权责，杜绝跨部门甩锅、不合理背损</li>
+                        <li>建立适配行业周期、适配企业资产结构的经营评价模型</li>
+                        <li>明确企业未来两条生存发展战略路径</li>
+                        <li>搭建后市场双模块独立管控体系，挖掘第二增长曲线</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 第二章 -->
+            <section class="section" id="diagnosis">
+                <div class="section-header">
+                    <div class="section-number">02</div>
+                    <div>
+                        <div class="section-title">企业现状深度诊断</div>
+                        <div class="section-subtitle">Core Diagnosis</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title">2.1 资产结构诊断</div>
+                        <ul class="feature-list">
+                            <li><strong>固定资产结构畸形</strong>：土地+厂房不动产占资产绝大部分，生产设备投入低、智能化程度弱</li>
+                            <li><strong>成本性态极端清晰</strong>：仅厂房、设备折旧为刚性固定成本；人工、能耗、维保、辅料全部为变动成本</li>
+                            <li><strong>资产盈利属性弱</strong>：不动产无经营溢价能力，制造环节为劳动密集组装加工，无高端制造壁垒</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">2.2 行业赛道诊断</div>
+                        <ul class="feature-list">
+                            <li>过去二十年依靠<strong>规模红利、人力红利、土地红利</strong>生存</li>
+                            <li>当前进入存量竞争时代，同质化严重、价格内卷、单纯压缩成本边际效益递减</li>
+                            <li>行业优胜劣汰逻辑明确：淘汰低端劳动密集组装工厂，留存两类高端制造</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">2.3 原有管理体系痛点</div>
+                    <div class="grid-2" style="margin-top: 16px;">
+                        <div>
+                            <span class="tag">制造端</span>
+                            <p>错误作为独立利润中心考核，不动产巨额折旧强行压给生产部门；内部工时定价无锚点，指标结果完全由定价人为操控，无法真实评价管理能力。</p>
+                        </div>
+                        <div>
+                            <span class="tag">财务端</span>
+                            <p>未区分会计口径与管理口径，政府补助、不动产摊销等非经营因素干扰经营利润；后市场板块未拆分免费质保、增值服务，成本混淆、价值模糊。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 第三章 -->
+            <section class="section" id="manufacturing">
+                <div class="section-header">
+                    <div class="section-number">03</div>
+                    <div>
+                        <div class="section-title">生产制造中心管控优化方案</div>
+                        <div class="section-subtitle">Manufacturing Center Optimization</div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    制造中心定位：企业战略工艺底盘、重资产产能承载单元。禁止以短期月度盈亏评价制造能力。
+                </div>
+
+                <div class="card" id="cost">
+                    <div class="card-title">3.2 成本性态划分（强制执行）</div>
+                    <div class="grid-2">
+                        <div style="background: #fff5f5; padding: 20px; border-radius: 8px; border-left: 4px solid #fc8181;">
+                            <div style="font-weight: 700; color: #c53030; margin-bottom: 12px;">固定成本（刚性不可控）</div>
+                            <p style="font-size: 14px;">厂房建筑物折旧、土地使用权摊销、生产设备折旧；停工亦正常计提，为企业战略级固定投入。</p>
+                        </div>
+                        <div style="background: #f0fff4; padding: 20px; border-radius: 8px; border-left: 4px solid #68d391;">
+                            <div style="font-weight: 700; color: #2f855a; margin-bottom: 12px;">变动成本（随工时线性波动）</div>
+                            <p style="font-size: 14px;">直接生产人工、水电能耗、设备维保、工装辅料、车间间接费用；工时为0则费用趋近于0。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">3.3 物料权责切割（来料加工模式）</div>
+                    <ul class="feature-list">
+                        <li>主材采购定价、物料涨跌风险归属于<strong>采购部门</strong></li>
+                        <li>生产车间仅承担<strong>制程损耗、报废、下料浪费</strong></li>
+                        <li>制造经营核算中，<strong>剔除主材采购成本</strong>，避免采购波动掩盖制造真实效率</li>
+                    </ul>
+                </div>
+
+                <div class="card" id="pricing">
+                    <div class="card-title">3.4 内部基准工时定价规则（最终定稿）</div>
+                    <p>结合企业15个月历史费率数据：历史最高72元/H、近12个月稳态65元/H、历史最优53元/H。</p>
+                    <div class="highlight-box" style="font-size: 18px; text-align: center;">
+                        官方核定基准单价：<span style="font-size: 28px; color: var(--accent);">65元/有效工时</span>（跨3年周期固定不变）
+                    </div>
+                    <p>定价逻辑：采用<strong>周期稳态保本定价法</strong>，剔除淡季极端低稼动、旺季超高稼动异常数据；价格含义：为本企业制造板块长期公允保本线，不宽松、不苛刻、无部门争议。</p>
+                </div>
+
+                <div class="card" id="kpi">
+                    <div class="card-title">3.5 四大核心经营指标（管理口径）</div>
+                    <p style="margin-bottom: 20px;">保留原指标逻辑，修正核算口径，全部采用<strong>管理双轨制</strong>，不受会计做账干扰。</p>
+
+                    <div style="display: grid; gap: 20px;">
+                        <div style="background: var(--bg); padding: 24px; border-radius: 8px; border: 1px solid var(--border);">
+                            <div style="font-weight: 700; color: var(--primary); margin-bottom: 8px;">制造EBIT（车间加工利润）</div>
+                            <div class="formula">
+                                <div class="formula-label">计算公式</div>
+                                制造EBIT = 核定基准工时收入 - 当月实际变动制造费用 - 当期折旧摊销
+                            </div>
+                            <p style="font-size: 14px; color: var(--text-light);">释义：只反映稼动效率、现场管理能力，不受主材、售价、市场、融资干扰。</p>
+                        </div>
+
+                        <div style="background: var(--bg); padding: 24px; border-radius: 8px; border: 1px solid var(--border);">
+                            <div style="font-weight: 700; color: var(--primary); margin-bottom: 8px;">ROFA（固定资产回报率）</div>
+                            <div class="formula">
+                                <div class="formula-label">计算公式</div>
+                                ROFA = 年化EBIT ÷ 生产类固定资产净值
+                            </div>
+                            <p style="font-size: 14px; color: var(--text-light);">释义：评价厂房、设备重资产利用效率，用于技改、自动化、设备投资决策。</p>
+                        </div>
+
+                        <div style="background: var(--bg); padding: 24px; border-radius: 8px; border: 1px solid var(--border);">
+                            <div style="font-weight: 700; color: var(--primary); margin-bottom: 8px;">ROI（经营性资产回报率）</div>
+                            <div class="formula">
+                                <div class="formula-label">计算公式</div>
+                                ROI = 年化EBIT ÷（固定资产 + 在制库存 + 生产占用流动资金）
+                            </div>
+                            <p style="font-size: 14px; color: var(--text-light);">释义：评价制造全资产包综合经营回报。</p>
+                        </div>
+
+                        <div style="background: var(--bg); padding: 24px; border-radius: 8px; border: 1px solid var(--border);">
+                            <div style="font-weight: 700; color: var(--primary); margin-bottom: 8px;">EVA（经济增加值）</div>
+                            <div class="formula">
+                                <div class="formula-label">计算公式</div>
+                                EVA = 税后EBIT - 投入资本 × 资金成本率
+                            </div>
+                            <p style="font-size: 14px; color: var(--text-light);">释义：扣除资金占用成本，判断制造板块是否真实创造股东价值。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">3.6 土地补助专项修正规则（管理口径独有）</div>
+                    <div class="grid-2">
+                        <div>
+                            <span class="tag">会计口径</span>
+                            <p>政府土地补助计入其他收益，不调整资产原值。</p>
+                        </div>
+                        <div>
+                            <span class="tag">管理口径</span>
+                            <p><strong>必须冲减土地无形资产成本</strong>，重新测算真实摊销；逻辑：政府补贴本质为地价打折，不属于经营收益，还原企业真实资本投入。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="strategy">
+                    <div class="card-title">3.7 企业未来两条战略生存路径</div>
+                    <div class="grid-2">
+                        <div style="background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%); padding: 28px; border-radius: 12px; border: 1px solid #90cdf4;">
+                            <div style="font-size: 20px; font-weight: 800; color: #2b6cb0; margin-bottom: 12px;">台积电路线</div>
+                            <div style="font-size: 14px; color: #2c5282; font-weight: 600; margin-bottom: 12px;">工艺溢价导向</div>
+                            <p style="font-size: 14px; color: #4a5568;">不盲目追加设备投入；深耕复杂非标、高难度工艺、高可靠性产品；打造同行不可复制的交付能力，赚取<strong>工艺壁垒溢价</strong>。</p>
+                        </div>
+                        <div style="background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%); padding: 28px; border-radius: 12px; border: 1px solid #81e6d9;">
+                            <div style="font-size: 20px; font-weight: 800; color: #234e52; margin-bottom: 12px;">特斯拉路线</div>
+                            <div style="font-size: 14px; color: #2c7a7b; font-weight: 600; margin-bottom: 12px;">效率摊销导向</div>
+                            <p style="font-size: 14px; color: #4a5568;">针对重复性工序投入自动化设备，以规模化产能摊薄不动产巨额折旧；用设备替代人工，降低劳动密集依赖。</p>
+                        </div>
+                    </div>
+                    <div class="warning-box" style="margin-top: 20px;">
+                        禁止继续维持：高不动产折旧 + 低设备投入 + 纯人工组装的低效模式。
+                    </div>
+                </div>
+            </section>
+
+            <!-- 第四章 -->
+            <section class="section" id="aftermarket">
+                <div class="section-header">
+                    <div class="section-number">04</div>
+                    <div>
+                        <div class="section-title">客服维保中心（后市场）管控优化方案</div>
+                        <div class="section-subtitle">Aftermarket Center Optimization</div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    本部门拆分为免费质保售后、增值付费售后两个独立业务单元，权责完全切割、核算完全隔离，禁止合并报表、合并考核。
+                </div>
+
+                <div class="card" id="warranty">
+                    <div class="card-title">4.1 模块一：免费质保售后（被动成本中心）</div>
+                    <div style="background: #fffaf0; padding: 16px 20px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid #ed8936;">
+                        <strong>业务定性：</strong>无盈利属性、无费用决定权；仅承担客户问题响应、售后兜底职能；费用根源来自研发、供应链、制造质量缺陷。
+                    </div>
+                    <div class="grid-2">
+                        <div>
+                            <div style="font-weight: 700; color: var(--primary); margin-bottom: 10px;">费用拆分规则</div>
+                            <ul class="feature-list">
+                                <li><strong>不可控费用（前端责任）</strong>：质保更换配件、质量索赔、不良物料成本</li>
+                                <li><strong>可控费用（维保责任）</strong>：技师薪酬、差旅、服务耗材、部门管理费用</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div style="font-weight: 700; color: var(--primary); margin-bottom: 10px;">考核指标（不考核利润、不考核降本）</div>
+                            <ul class="feature-list">
+                                <li><strong>服务效率</strong>：首次响应时长、工单闭环周期、按期结案率</li>
+                                <li><strong>质量反馈</strong>：缺陷分类台账、问题溯源率、前端改善落地数量</li>
+                                <li><strong>客户体验</strong>：质保服务满意度（剔除产品质量差评）</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="success-box" style="margin-top: 16px;">
+                        <strong>战略价值：</strong>为研发、制造、供应链提供质量改善数据，实现前端降本；为增值售后业务做口碑导流，是后市场流量底盘。
+                    </div>
+                </div>
+
+                <div class="card" id="valueadd">
+                    <div class="card-title">4.2 模块二：增值付费售后（主动利润中心）</div>
+                    <div style="background: #f0fff4; padding: 16px 20px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid #48bb78;">
+                        <strong>业务定性：</strong>具备完整产销闭环：存量客户获客→保养/配件销售→上门交付→实现盈利；定位为企业<strong>第二增长曲线</strong>，完全按照独立公司经营逻辑核算。
+                    </div>
+                    <div class="grid-2">
+                        <div>
+                            <div style="font-weight: 700; color: var(--primary); margin-bottom: 10px;">业务结构划分</div>
+                            <p>保养服务、原厂配件销售、设备改造升级、延保服务；优先发展高毛利配件、高附加值定制保养业务。</p>
+                        </div>
+                        <div>
+                            <div style="font-weight: 700; color: var(--primary); margin-bottom: 10px;">经营分析体系</div>
+                            <ul class="feature-list">
+                                <li><strong>获客分析</strong>：老客户转化率、存量客户挖掘深度、获客成本</li>
+                                <li><strong>营收分析</strong>：营收结构、高毛利业务占比、客户年均消费额</li>
+                                <li><strong>成本分析</strong>：配件采购成本、技师工单成本、部门间接费用</li>
+                                <li><strong>利润分析</strong>：增值业务毛利、增值业务EBIT</li>
+                                <li><strong>资产分析</strong>：配件库存周转率、库存资金占用成本、业务ROI、EVA</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 第五章 -->
+            <section class="section" id="methodology">
+                <div class="section-header">
+                    <div class="section-number">05</div>
+                    <div>
+                        <div class="section-title">财务分析体系与工具方法论</div>
+                        <div class="section-subtitle">Financial Analysis Methodology</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title">5.1 道：底层经营逻辑</div>
+                        <p>成本性态、权责切割、周期研判、资产本质、行业商业模式；决定分析结论是否正确、是否贴合企业真实经营。</p>
+                        <div style="margin-top: 12px; padding: 12px; background: var(--bg); border-radius: 6px; font-size: 13px; color: var(--text-light);">
+                            核心竞争力所在
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">5.1 术：数据工具</div>
+                        <p>Excel、Power BI均为工具；Excel可完成全部底层建模、测算、分析；Power BI用于自动化、可视化、动态看板，放大逻辑价值，不能弥补逻辑缺陷。</p>
+                        <div style="margin-top: 12px; padding: 12px; background: var(--bg); border-radius: 6px; font-size: 13px; color: var(--text-light);">
+                            辅助手段，不可喧宾夺主
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">5.2 企业永久执行规则</div>
+                    <div class="grid-2" style="margin-top: 16px;">
+                        <div style="padding: 20px; background: linear-gradient(135deg, #f7fafc, #edf2f7); border-radius: 8px;">
+                            <div style="font-weight: 700; color: var(--primary); margin-bottom: 8px;">双轨核算制度</div>
+                            <p style="font-size: 14px;">对外会计账务合规、对内管理账务求真</p>
+                        </div>
+                        <div style="padding: 20px; background: linear-gradient(135deg, #f7fafc, #edf2f7); border-radius: 8px;">
+                            <div style="font-weight: 700; color: var(--primary); margin-bottom: 8px;">权责彻底切割</div>
+                            <p style="font-size: 14px;">谁产生风险、谁承担成本、谁享受收益</p>
+                        </div>
+                        <div style="padding: 20px; background: linear-gradient(135deg, #f7fafc, #edf2f7); border-radius: 8px;">
+                            <div style="font-weight: 700; color: var(--primary); margin-bottom: 8px;">周期修正规则</div>
+                            <p style="font-size: 14px;">3年行业周期平滑指标，不以单月、单年评价长期资产</p>
+                        </div>
+                        <div style="padding: 20px; background: linear-gradient(135deg, #f7fafc, #edf2f7); border-radius: 8px;">
+                            <div style="font-weight: 700; color: var(--primary); margin-bottom: 8px;">拒绝盲目内卷</div>
+                            <p style="font-size: 14px;">放弃低效成本压缩，聚焦工艺溢价、资产效率两条主线</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 第六章 -->
+            <section class="section" id="implementation">
+                <div class="section-header">
+                    <div class="section-number">06</div>
+                    <div>
+                        <div class="section-title">落地实施建议</div>
+                        <div class="section-subtitle">Implementation Roadmap</div>
+                    </div>
+                </div>
+
+                <div style="display: grid; gap: 20px;">
+                    <div class="card" style="display: flex; align-items: flex-start; gap: 20px;">
+                        <div style="min-width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px;">1</div>
+                        <div>
+                            <div style="font-weight: 700; color: var(--primary); font-size: 16px; margin-bottom: 6px;">制度落地</div>
+                            <p style="margin: 0;">固化65元/小时基准加工单价，3年周期内不随意调整</p>
+                        </div>
+                    </div>
+                    <div class="card" style="display: flex; align-items: flex-start; gap: 20px;">
+                        <div style="min-width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px;">2</div>
+                        <div>
+                            <div style="font-weight: 700; color: var(--primary); font-size: 16px; margin-bottom: 6px;">台账搭建</div>
+                            <p style="margin: 0;">建立管理口径固定资产台账，修正土地补助真实资产成本</p>
+                        </div>
+                    </div>
+                    <div class="card" style="display: flex; align-items: flex-start; gap: 20px;">
+                        <div style="min-width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px;">3</div>
+                        <div>
+                            <div style="font-weight: 700; color: var(--primary); font-size: 16px; margin-bottom: 6px;">报表重构</div>
+                            <p style="margin: 0;">制造、后市场出具独立经营报表，免费/增值售后完全拆分</p>
+                        </div>
+                    </div>
+                    <div class="card" style="display: flex; align-items: flex-start; gap: 20px;">
+                        <div style="min-width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px;">4</div>
+                        <div>
+                            <div style="font-weight: 700; color: var(--primary); font-size: 16px; margin-bottom: 6px;">指标优化</div>
+                            <p style="margin: 0;">废除不合理考核，制造考核稼动与工艺能力、售后考核响应与盈利</p>
+                        </div>
+                    </div>
+                    <div class="card" style="display: flex; align-items: flex-start; gap: 20px;">
+                        <div style="min-width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px;">5</div>
+                        <div>
+                            <div style="font-weight: 700; color: var(--primary); font-size: 16px; margin-bottom: 6px;">数字化沉淀</div>
+                            <p style="margin: 0;">先用Excel搭建全部测算模板，后期迁移至Power BI做可视化看板</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 第七章 -->
+            <section class="section" id="summary">
+                <div class="section-header">
+                    <div class="section-number">07</div>
+                    <div>
+                        <div class="section-title">咨询总结</div>
+                        <div class="section-subtitle">Executive Summary</div>
+                    </div>
+                </div>
+
+                <div class="card summary-card">
+                    <p style="font-size: 16px; line-height: 1.8; margin-bottom: 20px;">本企业本质为<strong>不动产偏重、设备偏轻、劳动密集、非标组装</strong>制造企业；行业红利消退、存量竞争加剧，传统成本管控模式已无优化空间。</p>
+
+                    <div class="summary-inner-box">
+                        <div class="inner-title">核心结论</div>
+                        <p>制造端放弃短期利润考核，重资产看长周期回报，坚定不移走<strong>工艺壁垒或自动化效率</strong>两条路线；后市场拆分双业务，免费售后做质量溯源、增值售后做盈利增长。</p>
+                    </div>
+
+                    <p style="margin: 0;">财务分析坚持<strong>逻辑优先、工具为辅、权责分明、去伪存真</strong>，剥离账务噪音、还原经营真相，为企业管理层提供客观、公允、可落地的经营决策依据。</p>
+                </div>
+            </section>
+
+            <footer style="text-align: center; padding: 40px 0; color: var(--text-light); font-size: 13px; border-top: 1px solid var(--border); margin-top: 40px;">
+                企业制造板块 + 后市场板块 经营管控优化咨询说明书<br>
+            </footer>
+        </div>
+    </main>
+
+    <script>
+        // Active nav link on scroll
+        const sections = document.querySelectorAll('.section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Close mobile nav on click
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                document.querySelector('.nav').classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>
