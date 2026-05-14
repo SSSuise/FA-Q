@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPERATOR PROFILE | CONSULTANT-01</title>
+    <style>
+        /* =========================================================
+           RAINBOW SIX SIEGE UI DESIGN SYSTEM
+           色彩与变量定义
+           ========================================================= */
+        :root {
+            --bg-primary: #121212;
+            --bg-secondary: #0A0A0A;
+            --bg-card: #1E1E1E;
+            --bg-glass: rgba(18, 18, 18, 0.82);
+            --border-default: #3A3A3A;
+            --border-hover: #4A4A4A;
+            --defender-blue: #0078D7;
+            --defender-blue-dim: rgba(0, 120, 215, 0.15);
+            --attacker-orange: #FF8C00;
+            --attacker-orange-dim: rgba(255, 140, 0, 0.15);
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --text-label: #888888;
+            --text-dark: #666666;
+            --grid-gap: 12px;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 1.5;
+            letter-spacing: 0.03em;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 滚动条样式 - R6风格 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-default);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--defender-blue);
+        }
+
+        /* =========================================================
+           顶部战术导航栏 (TACTICAL NAVIGATION)
+           ========================================================= */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-default);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-logo {
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--defender-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--defender-blue);
+            position: relative;
+        }
+
+        .nav-logo::after {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            border: 1px solid var(--defender-blue);
+            opacity: 0.5;
+        }
+
+        .nav-title-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-title-main {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-primary);
+        }
+
+        .nav-title-sub {
+            font-size: 10px;
+            color: var(--text-label);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: -2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 4px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 8px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border: 1px solid transparent;
+            transition: var(--transition);
+            cursor: pointer;
+            background: none;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--defender-blue);
+            border-color: var(--defender-blue);
+            background: var(--defender-blue-dim);
+        }
+
+        .nav-status {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: var(--text-label);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--attacker-orange);
+            border-radius: 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* =========================================================
+           主体布局 (MAIN LAYOUT)
+           ========================================================= */
+        .main-container {
+            display: flex;
+            margin-top: 56px;
+            min-height: calc(100vh - 56px);
+        }
+
+        /* =========================================================
+           左侧干员信息卡 (OPERATOR CARD)
+           ========================================================= */
+        .operator-sidebar {
+            width: 340px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--border-default);
+            position: fixed;
+            left: 0;
+            top: 56px;
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .operator-header {
+            padding: 28px;
+            border-bottom: 1px solid var(--border-default);
+        }
+
+        .operator-icon-frame {
+            width: 80px;
+            height: 80px;
+            border: 2px solid var(--border-default);
+            position: relative;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+        }
+
+        .operator-icon-frame::before {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border: 1px solid var(--defender-blue);
+            opacity: 0.6;
+        }
+
+        .operator-icon {
+            font-size: 28px;
+            color: var(--defender-blue);
+        }
+
+        .operator-code {
+            font-size: 11px;
+            color: var(--text-label);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .operator-name {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .operator-role {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--defender-blue-dim);
+            border: 1px solid var(--defender-blue);
+            color: var(--defender-blue);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .operator-section {
+            padding: 20px 28px;
+            border-bottom: 1px solid var(--border-default);
+        }
+
+        .section-label {
+            font-size: 10px;
+            color: var(--text-label);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        /* 属性条 (ARMOR/SPEED/DIFFICULTY) */
+        .stat-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .stat-name {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            width: 80px;
+        }
+
+        .stat-blocks {
+            display: flex;
+            gap: 4px;
+            flex: 1;
+            justify-content: flex-end;
+        }
+
+        .stat-block {
+            width: 28px;
+            height: 14px;
+            border: 1px solid var(--border-default);
+            background: transparent;
+            transition: var(--transition);
+        }
+
+        .stat-block.filled {
+            background: var(--defender-blue);
+            border-color: var(--defender-blue);
+        }
+
+        .stat-block.filled-orange {
+            background: var(--attacker-orange);
+            border-color: var(--attacker-orange);
+        }
+
+        .operator-bio {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-weight: 500;
+        }
+
+        .contact-grid {
+            display: grid;
+            gap: 8px;
+        }
+
+        .contact-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(58, 58, 58, 0.4);
+        }
+
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+
+        .contact-label {
+            color: var(--text-label);
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+        }
+
+        .contact-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* =========================================================
+           右侧主内容区 (MAIN CONTENT)
+           ========================================================= */
+        .content-area {
+            margin-left: 340px;
+            flex: 1;
+            padding: 32px;
+            max-width: calc(100vw - 340px);
+        }
+
+        /* =========================================================
+           技能/标签栏 (TACTICAL CAPABILITIES)
+           ========================================================= */
+        .capabilities-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-default);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-default);
+        }
+
+        .panel-icon {
+            color: var(--defender-blue);
+            font-size: 16px;
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-primary);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .skill-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .skill-name {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .skill-value {
+            font-size: 12px;
+            color: var(--defender-blue);
+            font-weight: 700;
+        }
+
+        .skill-bar-bg {
+            height: 6px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-bar-fill {
+            height: 100%;
+            background: var(--defender-blue);
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0;
+        }
+
+        .skill-bar-fill.orange {
+            background: var(--attacker-orange);
+        }
+
+        /* =========================================================
+           作品展示网格 (OPERATIONS GRID)
+           ========================================================= */
+        .operations-panel {
+            margin-bottom: 24px;
+        }
+
+        .operations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--grid-gap);
+        }
+
+        .op-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-default);
+            padding: 0;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .op-card:hover {
+            border-color: var(--defender-blue);
+            transform: scale(1.02);
+            background: var(--defender-blue-dim);
+            z-index: 10;
+        }
+
+        .op-card:hover .op-card-accent {
+            background: var(--defender-blue);
+        }
+
+        .op-card-accent {
+            height: 3px;
+            background: var(--border-default);
+            transition: var(--transition);
+        }
+
+        .op-card-body {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .op-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .op-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--border-default);
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .op-type {
+            font-size: 10px;
+            padding: 3px 8px;
+            border: 1px solid var(--border-default);
+            color: var(--text-label);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+        }
+
+        .op-type.defender {
+            border-color: var(--defender-blue);
+            color: var(--defender-blue);
+            background: var(--defender-blue-dim);
+        }
+
+        .op-type.attacker {
+            border-color: var(--attacker-orange);
+            color: var(--attacker-orange);
+            background: var(--attacker-orange-dim);
+        }
+
+        .op-code {
+            font-size: 11px;
+            color: var(--defender-blue);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .op-title {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .op-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .op-footer {
+            padding: 12px 20px;
+            border-top: 1px solid var(--border-default);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+            color: var(--text-label);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* =========================================================
+           详情面板 (OPERATION DETAIL)
+           ========================================================= */
+        .detail-overlay {
+            display: none;
+            position: fixed;
+            inset: 56px 0 0 340px;
+            background: var(--bg-primary);
+            z-index: 500;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .detail-overlay.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .detail-container {
+            padding: 32px;
+            max-width: 900px;
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-default);
+        }
+
+        .detail-title-group {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .detail-number {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--defender-blue);
+            line-height: 1;
+            opacity: 0.8;
+        }
+
+        .detail-titles {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .detail-code {
+            font-size: 12px;
+            color: var(--defender-blue);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .detail-title {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .detail-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .detail-close {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border-default);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .detail-close:hover {
+            border-color: var(--attacker-orange);
+            color: var(--attacker-orange);
+            background: var(--attacker-orange-dim);
+        }
+
+        /* 详情内容卡片 */
+        .detail-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .detail-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-default);
+            padding: 24px;
+            transition: var(--transition);
+        }
+
+        .detail-card:hover {
+            border-color: var(--border-hover);
+        }
+
+        .detail-card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-card-title::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 16px;
+            background: var(--defender-blue);
+        }
+
+        .detail-card-title.orange::before {
+            background: var(--attacker-orange);
+        }
+
+        .detail-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .detail-text:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-text strong {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        /* 战术高亮框 */
+        .tac-box {
+            background: rgba(0, 120, 215, 0.08);
+            border-left: 3px solid var(--defender-blue);
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 13px;
+            color: var(--text-primary);
+            font-weight: 600;
+            line-height: 1.6;
+        }
+
+        .tac-box.orange {
+            background: rgba(255, 140, 0, 0.08);
+            border-left-color: var(--attacker-orange);
+        }
+
+        .tac-box.red {
+            background: rgba(220, 53, 69, 0.08);
+            border-left-color: #dc3545;
+        }
+
+        .tac-box.green {
+            background: rgba(40, 167, 69, 0.08);
+            border-left-color: #28a745;
+        }
+
+        /* 战术列表 */
+        .tac-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tac-list li {
+            padding: 10px 0;
+            padding-left: 24px;
+            position: relative;
+            border-bottom: 1px solid rgba(58, 58, 58, 0.4);
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .tac-list li:last-child {
+            border-bottom: none;
+        }
+
+        .tac-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--defender-blue);
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        /* 公式块 */
+        .tac-formula {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            padding: 16px 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: var(--text-primary);
+            margin: 16px 0;
+            position: relative;
+        }
+
+        .tac-formula-label {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 10px;
+            color: var(--text-label);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        /* 双栏网格 */
+        .tac-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .tac-grid-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            padding: 20px;
+        }
+
+        .tac-grid-item-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .tac-grid-item p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        /* 标签 */
+        .tac-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            background: var(--defender-blue-dim);
+            border: 1px solid var(--defender-blue);
+            color: var(--defender-blue);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+
+        .tac-tag.orange {
+            background: var(--attacker-orange-dim);
+            border-color: var(--attacker-orange);
+            color: var(--attacker-orange);
+        }
+
+        /* 实施步骤编号 */
+        .step-row {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .step-number {
+            min-width: 36px;
+            height: 36px;
+            background: var(--defender-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .step-content-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .step-content-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        /* 页脚 */
+        .site-footer {
+            margin-left: 340px;
+            padding: 24px 32px;
+            border-top: 1px solid var(--border-default);
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-label);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* =========================================================
+           响应式 (RESPONSIVE)
+           ========================================================= */
+        @media (max-width: 1024px) {
+            .operator-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 900;
+            }
+            .operator-sidebar.open {
+                transform: translateX(0);
+            }
+            .content-area {
+                margin-left: 0;
+                max-width: 100vw;
+            }
+            .detail-overlay {
+                inset: 56px 0 0 0;
+            }
+            .site-footer {
+                margin-left: 0;
+            }
+            .operations-grid {
+                grid-template-columns: 1fr;
+            }
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+            .tac-grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 移动端菜单按钮 */
+        .mobile-menu-btn {
+            display: none;
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border-default);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 16px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 1024px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========================================================= -->
+    <!-- 顶部战术导航栏 (TACTICAL NAVIGATION) -->
+    <!-- ========================================================= -->
+    <nav class="top-nav">
+        <div class="nav-brand">
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+            <div class="nav-logo">OP</div>
+            <div class="nav-title-group">
+                <div class="nav-title-main">Operator Profile</div>
+                <div class="nav-title-sub">Tactical Management Consultant</div>
+            </div>
+        </div>
+        <div class="nav-links">
+            <a class="nav-link active" onclick="scrollToSection('operator')">Operator</a>
+            <a class="nav-link" onclick="scrollToSection('capabilities')">Loadout</a>
+            <a class="nav-link" onclick="scrollToSection('operations')">Tactics</a>
+            <a class="nav-link" onclick="scrollToSection('contact')">Mission</a>
+        </div>
+        <div class="nav-status">
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span>Online</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- ========================================================= -->
+        <!-- 左侧干员信息卡 (OPERATOR SIDEBAR) -->
+        <!-- ========================================================= -->
+        <aside class="operator-sidebar" id="operatorSidebar">
+            <div class="operator-header">
+                <div class="operator-icon-frame">
+                    <div class="operator-icon">◈</div>
+                </div>
+                <div class="operator-code">CONSULTANT-01</div>
+                <div class="operator-name">潘叶荣</div>
+                <span class="operator-role">Strategist / Financial Architect</span>
+            </div>
+
+            <div class="operator-section">
+                <div class="section-label">Operator Attributes</div>
+                <div class="stat-row">
+                    <span class="stat-name">Vision</span>
+                    <div class="stat-blocks">
+                        <div class="stat-block filled"></div>
+                        <div class="stat-block filled"></div>
+                        <div class="stat-block filled"></div>
+                    </div>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-name">Speed</span>
+                    <div class="stat-blocks">
+                        <div class="stat-block filled"></div>
+                        <div class="stat-block filled"></div>
+                        <div class="stat-block"></div>
+                    </div>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-name">Difficulty</span>
+                    <div class="stat-blocks">
+                        <div class="stat-block filled-orange"></div>
+                        <div class="stat-block filled-orange"></div>
+                        <div class="stat-block filled-orange"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="operator-section">
+                <div class="section-label">Biography</div>
+                <p class="operator-bio">
+                    专注于非标智能装备制造行业的经营管控体系重构。擅长在存量竞争时代剥离账务噪音、还原经营真相，通过权责切割与双轨核算为企业建立适配重资产结构的评价模型与战略路径。
+                </p>
+            </div>
+
+            <div class="operator-section">
+                <div class="section-label">Unit Affiliation</div>
+                <p class="operator-bio">
+                    ENTERPRISE MANAGEMENT DIVISION<br>
+                    Manufacturing & Aftermarket Optimization Bureau
+                </p>
+            </div>
+
+            <div class="operator-section" id="contact">
+                <div class="section-label">Communications</div>
+                <div class="contact-grid">
+                    <div class="contact-item">
+                        <span class="contact-label">Uplink</span>
+                        <span class="contact-value">532018898@qq.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-label">Secure Line</span>
+                        <span class="contact-value">+86 177-0569-4575</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-label">Location</span>
+                        <span class="contact-value">****</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ========================================================= -->
+        <!-- 右侧主内容区 (MAIN CONTENT AREA) -->
+        <!-- ========================================================= -->
+        <main class="content-area">
+
+            <!-- 技能/标签栏 (CAPABILITIES) -->
+            <section class="capabilities-panel" id="capabilities">
+                <div class="panel-header">
+                    <span class="panel-icon">▣</span>
+                    <span class="panel-title">Tactical Capabilities</span>
+                </div>
+                <div class="skills-grid">
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Financial Modeling</span>
+                            <span class="skill-value">90%</span>
+                        </div>
+                        <div class="skill-bar-bg">
+                            <div class="skill-bar-fill" data-width="90%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Cost Control</span>
+                            <span class="skill-value">95%</span>
+                        </div>
+                        <div class="skill-bar-bg">
+                            <div class="skill-bar-fill" data-width="95%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Strategic Analysis</span>
+                            <span class="skill-value">88%</span>
+                        </div>
+                        <div class="skill-bar-bg">
+                            <div class="skill-bar-fill" data-width="88%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Data Visualization</span>
+                            <span class="skill-value">85%</span>
+                        </div>
+                        <div class="skill-bar-bg">
+                            <div class="skill-bar-fill orange" data-width="85%"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 作品展示网格 (OPERATIONS GRID) -->
+            <section class="operations-panel" id="operations">
+                <div class="panel-header">
+                    <span class="panel-icon">◈</span>
+                    <span class="panel-title">Operations Archive</span>
+                </div>
+                <div class="operations-grid">
+                    <!-- OP-01 -->
+                    <div class="op-card" onclick="showDetail('op01')">
+                        <div class="op-card-accent"></div>
+                        <div class="op-card-body">
+                            <div class="op-card-header">
+                                <div class="op-number">01</div>
+                                <span class="op-type defender">Defender</span>
+                            </div>
+                            <div class="op-code">Mission Briefing</div>
+                            <div class="op-title">项目概述</div>
+                            <div class="op-desc">非标智能装备制造行业 · 双板块核算重构 · 战略路径规划</div>
+                        </div>
+                        <div class="op-footer">
+                            <span>Status: Active</span>
+                            <span>▸ View Intel</span>
+                        </div>
+                    </div>
+
+                    <!-- OP-02 -->
+                    <div class="op-card" onclick="showDetail('op02')">
+                        <div class="op-card-accent"></div>
+                        <div class="op-card-body">
+                            <div class="op-card-header">
+                                <div class="op-number">02</div>
+                                <span class="op-type attacker">Attacker</span>
+                            </div>
+                            <div class="op-code">Situation Analysis</div>
+                            <div class="op-title">企业现状深度诊断</div>
+                            <div class="op-desc">资产结构畸形 · 行业赛道转换 · 管理体系失真</div>
+                        </div>
+                        <div class="op-footer">
+                            <span>Status: Critical</span>
+                            <span>▸ View Intel</span>
+                        </div>
+                    </div>
+
+                    <!-- OP-03 -->
+                    <div class="op-card" onclick="showDetail('op03')">
+                        <div class="op-card-accent"></div>
+                        <div class="op-card-body">
+                            <div class="op-card-header">
+                                <div class="op-number">03</div>
+                                <span class="op-type defender">Defender</span>
+                            </div>
+                            <div class="op-code">Manufacturing Protocol</div>
+                            <div class="op-title">生产制造中心管控优化</div>
+                            <div class="op-desc">成本性态 · 工时定价 · 四大指标 · 战略路径</div>
+                        </div>
+                        <div class="op-footer">
+                            <span>Status: Active</span>
+                            <span>▸ View Intel</span>
+                        </div>
+                    </div>
+
+                    <!-- OP-04 -->
+                    <div class="op-card" onclick="showDetail('op04')">
+                        <div class="op-card-accent"></div>
+                        <div class="op-card-body">
+                            <div class="op-card-header">
+                                <div class="op-number">04</div>
+                                <span class="op-type attacker">Attacker</span>
+                            </div>
+                            <div class="op-code">Aftermarket Ops</div>
+                            <div class="op-title">客服维保中心管控优化</div>
+                            <div class="op-desc">免费质保 · 增值付费 · 双模块独立核算</div>
+                        </div>
+                        <div class="op-footer">
+                            <span>Status: Active</span>
+                            <span>▸ View Intel</span>
+                        </div>
+                    </div>
+
+                    <!-- OP-05 -->
+                    <div class="op-card" onclick="showDetail('op05')">
+                        <div class="op-card-accent"></div>
+                        <div class="op-card-body">
+                            <div class="op-card-header">
+                                <div class="op-number">05</div>
+                                <span class="op-type defender">Defender</span>
+                            </div>
+                            <div class="op-code">Tactical Finance</div>
+                            <div class="op-title">财务分析体系与方法论</div>
+                            <div class="op-desc">道与术层级 · 双轨核算 · 永久执行规则</div>
+                        </div>
+                        <div class="op-footer">
+                            <span>Status: Active</span>
+                            <span>▸ View Intel</span>
+                        </div>
+                    </div>
+
+                    <!-- OP-06 -->
+                    <div class="op-card" onclick="showDetail('op06')">
+                        <div class="op-card-accent"></div>
+                        <div class="op-card-body">
+                            <div class="op-card-header">
+                                <div class="op-number">06</div>
+                                <span class="op-type attacker">Attacker</span>
+                            </div>
+                            <div class="op-code">Deployment Plan</div>
+                            <div class="op-title">落地实施建议</div>
+                            <div class="op-desc">制度落地 · 台账搭建 · 报表重构 · 数字化沉淀</div>
+                        </div>
+                        <div class="op-footer">
+                            <span>Status: Pending</span>
+                            <span>▸ View Intel</span>
+                        </div>
+                    </div>
+
+                    <!-- OP-07 -->
+                    <div class="op-card" onclick="showDetail('op07')">
+                        <div class="op-card-accent"></div>
+                        <div class="op-card-body">
+                            <div class="op-card-header">
+                                <div class="op-number">07</div>
+                                <span class="op-type defender">Defender</span>
+                            </div>
+                            <div class="op-code">Mission Summary</div>
+                            <div class="op-title">咨询总结</div>
+                            <div class="op-desc">工艺壁垒 · 自动化效率 · 逻辑优先 · 去伪存真</div>
+                        </div>
+                        <div class="op-footer">
+                            <span>Status: Complete</span>
+                            <span>▸ View Intel</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- 详情面板 (OPERATION DETAILS) -->
+    <!-- 包含全部7个章节的完整内容 -->
+    <!-- ========================================================= -->
+
+    <!-- OP-01: 项目概述 -->
+    <div class="detail-overlay" id="detail-op01">
+        <div class="detail-container">
+            <div class="detail-header">
+                <div class="detail-title-group">
+                    <div class="detail-number">01</div>
+                    <div class="detail-titles">
+                        <div class="detail-code">Mission Briefing</div>
+                        <div class="detail-title">项目概述</div>
+                        <div class="detail-subtitle">Project Overview | 经营管控优化咨询</div>
+                    </div>
+                </div>
+                <button class="detail-close" onclick="closeDetail()">×</button>
+            </div>
+            <div class="detail-content">
+                <div class="detail-card">
+                    <div class="detail-card-title">1.1 咨询背景</div>
+                    <p class="detail-text">本企业属于<strong>非标智能装备制造行业</strong>，业务模式以销定产、来料加工属性极强；原材料采购成本占总成本比重极高，制造端无原材料定价权。企业资产结构偏不动产重资产，土地使用权、厂房建筑物摊销折旧占固定资产绝大部分，生产加工设备投入偏低，生产模式偏向人工密集组装。</p>
+                    <p class="detail-text">行业具备明确<strong>3年周期性特征</strong>，当前行业由增量规模红利时代转入存量内卷竞争时代，企业原有成本核算、内部考核、经营评价体系出现严重失真，部门权责混淆、指标无法对标、经营结果无法真实反映业务价值。</p>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-card-title">1.2 咨询范围</div>
+                    <p class="detail-text">本次咨询覆盖两大经营板块：</p>
+                    <div class="tac-grid-2">
+                        <div class="tac-grid-item">
+                            <div class="tac-grid-item-title">生产制造中心</div>
+                            <p>Manufacturing Center · 战略工艺底盘 · 重资产产能承载单元</p>
+                        </div>
+                        <div class="tac-grid-item">
+                            <div class="tac-grid-item-title">客服维保中心</div>
+                            <p>Aftermarket Service · 后市场流量底盘 · 第二增长曲线</p>
+                        </div>
+                    </div>
+                    <p class="detail-text">重构双板块核算逻辑、权责边界、指标体系、评价模型；统一会计口径与管理口径双轨制度；明确企业中长期战略发展路径。</p>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-card-title">1.3 咨询目标</div>
+                    <ul class="tac-list">
+                        <li>剔除会计账务噪音，还原真实经营结果</li>
+                        <li>切割部门权责，杜绝跨部门甩锅、不合理背损</li>
+                        <li>建立适配行业周期、适配企业资产结构的经营评价模型</li>
+                        <li>明确企业未来两条生存发展战略路径</li>
+                        <li>搭建后市场双模块独立管控体系，挖掘第二增长曲线</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OP-02: 现状诊断 -->
+    <div class="detail-overlay" id="detail-op02">
+        <div class="detail-container">
+            <div class="detail-header">
+                <div class="detail-title-group">
+                    <div class="detail-number">02</div>
+                    <div class="detail-titles">
+                        <div class="detail-code">Situation Analysis</div>
+                        <div class="detail-title">企业现状深度诊断</div>
+                        <div class="detail-subtitle">Core Diagnosis | 核心研判</div>
+                    </div>
+                </div>
+                <button class="detail-close" onclick="closeDetail()">×</button>
+            </div>
+            <div class="detail-content">
+                <div class="detail-card">
+                    <div class="detail-card-title orange">2.1 资产结构诊断（核心痛点）</div>
+                    <ul class="tac-list">
+                        <li><strong>固定资产结构畸形</strong>：土地+厂房不动产占资产绝大部分，生产设备投入低、智能化程度弱</li>
+                        <li><strong>成本性态极端清晰</strong>：仅厂房、设备折旧为刚性固定成本；人工、能耗、维保、辅料全部为变动成本</li>
+                        <li><strong>资产盈利属性弱</strong>：不动产无经营溢价能力，制造环节为劳动密集组装加工，无高端制造壁垒</li>
+                    </ul>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-card-title orange">2.2 行业赛道诊断</div>
+                    <ul class="tac-list">
+                        <li>过去二十年依靠<strong>规模红利、人力红利、土地红利</strong>生存</li>
+                        <li>当前进入存量竞争时代，同质化严重、价格内卷、单纯压缩成本边际效益递减</li>
+                        <li>行业优胜劣汰逻辑明确：淘汰低端劳动密集组装工厂，留存两类高端制造</li>
+                    </ul>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-card-title orange">2.3 原有管理体系痛点</div>
+                    <div class="tac-grid-2">
+                        <div class="tac-grid-item">
+                            <div class="tac-grid-item-title">制造端</div>
+                            <p>错误作为独立利润中心考核，不动产巨额折旧强行压给生产部门；内部工时定价无锚点，指标结果完全由定价人为操控，无法真实评价管理能力。</p>
+                        </div>
+                        <div class="tac-grid-item">
+                            <div class="tac-grid-item-title">财务端</div>
+                            <p>未区分会计口径与管理口径，政府补助、不动产摊销等非经营因素干扰经营利润；后市场板块未拆分免费质保、增值服务，成本混淆、价值模糊。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OP-03: 生产制造中心 -->
+    <div class="detail-overlay" id="detail-op03">
+        <div class="detail-container">
+            <div class="detail-header">
+                <div class="detail-title-group">
+                    <div class="detail-number">03</div>
+                    <div class="detail-titles">
+                        <div class="detail-code">Manufacturing Protocol</div>
+                        <div class="detail-title">生产制造中心管控优化</div>
+                        <div class="detail-subtitle">Manufacturing Center Optimization</div>
+                    </div>
+                </div>
+                <button class="detail-close" onclick="closeDetail()">×</button>
+            </div>
+            <div class="detail-content">
+                <div class="tac-box">
+                    制造中心定位：企业战略工艺底盘、重资产产能承载单元。禁止以短期月度盈亏评价制造能力。
+                </div>
+
+                <div class="detail-card">
+                    <div class="detail-card-title">3.2 成本性态划分（强制执行）</div>
+                    <div class="tac-grid-2">
+                        <div class="tac-grid-item" style="border-left: 3px solid #dc3545;">
+                            <div class="tac-grid-item-title">固定成本（刚性不可控）</div>
+                            <p>厂房建筑物折旧、土地使用权摊销、生产设备折旧；停工亦正常计提，为企业战略级固定投入。</p>
+                        </div>
+                        <div class="tac-grid-item" style="border-left: 3px solid #28a745;">
+                            <div class="tac-grid-item-title">变动成本（随工时线性波动）</div>
+                            <p>直接生产人工、水电能耗、设备维保、工装辅料、车间间接费用；工时为0则费用趋近于0。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <div class="detail-card-title">3.3 物料权责切割（来料加工模式）</div>
+                    <ul class="tac-list">
+                        <li>主材采购定价、物料涨跌风险归属于<strong>采购部门</strong></li>
+                        <li>生产车间仅承担<strong>制程损耗、报废、下料浪费</strong></li>
+                        <li>制造经营核算中，<strong>剔除主材采购成本</strong>，避免采购波动掩盖制造真实效率</li>
+                    </ul>
+                </div>
+
+                <div class="detail-card">
+                    <div class="detail-card-title">3.4 内部基准工时定价规则（最终定稿）</div>
+                    <p class="detail-text">结合企业15个月历史费率数据：历史最高72元/H、近12个月稳态65元/H、历史最优53元/H。</p>
+                    <div class="tac-box" style="text-align: center; font-size: 16px;">
+                        官方核定基准单价：<span style="font-size: 24px; color: var(--defender-blue);">65元/有效工时</span>（跨3年周期固定不变）
+                    </div>
+                    <p class="detail-text">定价逻辑：采用<strong>周期稳态保本定价法</strong>，剔除淡季极端低稼动、旺季超高稼动异常数据；价格含义：为本企业制造板块长期公允保本线，不宽松、不苛刻、无部门争议。</p>
+                </div>
+
+                <div class="detail-card">
+                    <div class="detail-card-title">3.5 四大核心经营指标（管理口径）</div>
+                    <p class="detail-text">保留原指标逻辑，修正核算口径，全部采用<strong>管理双轨制</strong>，不受会计做账干扰。</p>
+
+                    <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 16px;">
+                        <div class="tac-grid-item">
+                            <div class="tac-grid-item-title">制造EBIT（车间加工利润）</div>
+                            <div class="tac-formula">
+                                <div class="tac-formula-label">Formula</div>
+                                制造EBIT = 核定基准工时收入 - 当月实际变动制造费用 - 当期折旧摊销
+                            </div>
+                            <p style="font-size: 12px; color: var(--text-label); margin-top: 8px;">释义：只反映稼动效率、现场管理能力，不受主材、售价、市场、融资干扰。</p>
+                        </div>
+                        <div class="tac-grid-item">
+                            <div class="tac-grid-item-title">ROFA（固定资产回报率）</div>
+                            <div class="tac-formula">
+                                <div class="tac-formula-label">Formula</div>
+                                ROFA = 年化EBIT ÷ 生产类固定资产净值
+                            </div>
+                            <p style="font-size: 12px; color: var(--text-label); margin-top: 8px;">释义：评价厂房、设备重资产利用效率，用于技改、自动化、设备投资决策。</p>
+                        </div>
+                        <div class="tac-grid-item">
+                            <div class="tac-grid-item-title">ROI（经营性资产回报率）</div>
+                            <div class="tac-formula">
+                                <div class="tac-formula-label">Formula</div>
+                                ROI = 年化EBIT ÷（固定资产 + 在制库存 + 生产占用流动资金）
+                            </div>
+                            <p style="font-size: 12px; color: var(--text-label); margin-top: 8px;">释义：评价制造全资产包综合经营回报。</p>
+                        </div>
+                        <div class="tac-grid-item">
+                            <div class="tac-grid-item-title">EVA（经济增加值）</div>
+                            <div class="tac-formula">
+                                <div class="tac-formula-label">Formula</div>
+                                EVA = 税后EBIT - 投入资本 × 资金成本率
+                            </div>
+                            <p style="font-size: 12px; color: var(--text-label); margin-top: 8px;">释义：扣除资金占用成本，判断制造板块是否真实创造股东价值。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <div class="detail-card-title">3.6 土地补助专项修正规则</div>
+                    <div class="tac-grid-2">
+                        <div class="tac-grid-item">
+                            <div class="tac-grid-item-title">会计口径</div>
+                            <p>政府土地补助计入其他收益，不调整资产原值。</p>
+                        </div>
+                        <div class="tac-grid-item">
+                            <div class="tac-grid-item-title">管理口径</div>
+                            <p><strong>必须冲减土地无形资产成本</strong>，重新测算真实摊销；逻辑：政府补贴本质为地价打折，不属于经营收益，还原企业真实资本投入。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <div class="detail-card-title orange">3.7 企业未来两条战略生存路径</div>
+                    <div class="tac-grid-2">
+                        <div class="tac-grid-item" style="border-color: var(--defender-blue);">
+                            <div class="tac-grid-item-title" style="color: var(--defender-blue);">台积电路线 · 工艺溢价</div>
+                            <p>不盲目追加设备投入；深耕复杂非标、高难度工艺、高可靠性产品；打造同行不可复制的交付能力，赚取<strong>工艺壁垒溢价</strong>。</p>
+                        </div>
+                        <div class="tac-grid-item" style="border-color: var(--attacker-orange);">
+                            <div class="tac-grid-item-title" style="color: var(--attacker-orange);">特斯拉路线 · 效率摊销</div>
+                            <p>针对重复性工序投入自动化设备，以规模化产能摊薄不动产巨额折旧；用设备替代人工，降低劳动密集依赖。</p>
+                        </div>
+                    </div>
+                    <div class="tac-box red" style="margin-top: 16px;">
+                        禁止继续维持：高不动产折旧 + 低设备投入 + 纯人工组装的低效模式。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OP-04: 后市场 -->
+    <div class="detail-overlay" id="detail-op04">
+        <div class="detail-container">
+            <div class="detail-header">
+                <div class="detail-title-group">
+                    <div class="detail-number">04</div>
+                    <div class="detail-titles">
+                        <div class="detail-code">Aftermarket Ops</div>
+                        <div class="detail-title">客服维保中心管控优化</div>
+                        <div class="detail-subtitle">Aftermarket Center Optimization</div>
+                    </div>
+                </div>
+                <button class="detail-close" onclick="closeDetail()">×</button>
+            </div>
+            <div class="detail-content">
+                <div class="tac-box orange">
+                    本部门拆分为免费质保售后、增值付费售后两个独立业务单元，权责完全切割、核算完全隔离，禁止合并报表、合并考核。
+                </div>
+
+                <div class="detail-card">
+                    <div class="detail-card-title">4.1 模块一：免费质保售后（被动成本中心）</div>
+                    <div class="tac-box" style="border-left-color: var(--attacker-orange);">
+                        <strong>业务定性：</strong>无盈利属性、无费用决定权；仅承担客户问题响应、售后兜底职能；费用根源来自研发、供应链、制造质量缺陷。
+                    </div>
+                    <div class="tac-grid-2">
+                        <div class="tac-grid-item">
+                            <div class="tac-grid-item-title">费用拆分规则</div>
+                            <ul class="tac-list">
+                                <li><strong>不可控费用（前端责任）</strong>：质保更换配件、质量索赔、不良物料成本</li>
+                                <li><strong>可控费用（维保责任）</strong>：技师薪酬、差旅、服务耗材、部门管理费用</li>
+                            </ul>
+                        </div>
+                        <div class="tac-grid-item">
+                            <div class="tac-grid-item-title">考核指标（不考核利润、不考核降本）</div>
+                            <ul class="tac-list">
+                                <li><strong>服务效率</strong>：首次响应时长、工单闭环周期、按期结案率</li>
+                                <li><strong>质量反馈</strong>：缺陷分类台账、问题溯源率、前端改善落地数量</li>
+                                <li><strong>客户体验</strong>：质保服务满意度（剔除产品质量差评）</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tac-box green" style="margin-top: 16px;">
+                        <strong>战略价值：</strong>为研发、制造、供应链提供质量改善数据，实现前端降本；为增值售后业务做口碑导流，是后市场流量底盘。
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <div class="detail-card-title">4.2 模块二：增值付费售后（主动利润中心）</div>
+                    <div class="tac-box green" style="border-left-color: #28a745;">
+                        <strong>业务定性：</strong>具备完整产销闭环：存量客户获客→保养/配件销售→上门交付→实现盈利；定位为企业<strong>第二增长曲线</strong>，完全按照独立公司经营逻辑核算。
+                    </div>
+                    <div class="tac-grid-2">
+                        <div class="tac-grid-item">
+                            <div class="tac-grid-item-title">业务结构划分</div>
+                            <p>保养服务、原厂配件销售、设备改造升级、延保服务；优先发展高毛利配件、高附加值定制保养业务。</p>
+                        </div>
+                        <div class="tac-grid-item">
+                            <div class="tac-grid-item-title">经营分析体系</div>
+                            <ul class="tac-list">
+                                <li><strong>获客分析</strong>：老客户转化率、存量客户挖掘深度、获客成本</li>
+                                <li><strong>营收分析</strong>：营收结构、高毛利业务占比、客户年均消费额</li>
+                                <li><strong>成本分析</strong>：配件采购成本、技师工单成本、部门间接费用</li>
+                                <li><strong>利润分析</strong>：增值业务毛利、增值业务EBIT</li>
+                                <li><strong>资产分析</strong>：配件库存周转率、库存资金占用成本、业务ROI、EVA</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OP-05: 财务体系 -->
+    <div class="detail-overlay" id="detail-op05">
+        <div class="detail-container">
+            <div class="detail-header">
+                <div class="detail-title-group">
+                    <div class="detail-number">05</div>
+                    <div class="detail-titles">
+                        <div class="detail-code">Tactical Finance</div>
+                        <div class="detail-title">财务分析体系与工具方法论</div>
+                        <div class="detail-subtitle">Financial Analysis Methodology</div>
+                    </div>
+                </div>
+                <button class="detail-close" onclick="closeDetail()">×</button>
+            </div>
+            <div class="detail-content">
+                <div class="tac-grid-2">
+                    <div class="detail-card">
+                        <div class="detail-card-title">5.1 道：底层经营逻辑</div>
+                        <p class="detail-text">成本性态、权责切割、周期研判、资产本质、行业商业模式；决定分析结论是否正确、是否贴合企业真实经营。</p>
+                        <div class="tac-box" style="margin-bottom: 0;">核心竞争力所在</div>
+                    </div>
+                    <div class="detail-card">
+                        <div class="detail-card-title">5.1 术：数据工具</div>
+                        <p class="detail-text">Excel、Power BI均为工具；Excel可完成全部底层建模、测算、分析；Power BI用于自动化、可视化、动态看板，放大逻辑价值，不能弥补逻辑缺陷。</p>
+                        <div class="tac-box" style="margin-bottom: 0;">辅助手段，不可喧宾夺主</div>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <div class="detail-card-title">5.2 企业永久执行规则</div>
+                    <div class="tac-grid-2">
+                        <div class="tac-grid-item">
+                            <div class="tac-grid-item-title">双轨核算制度</div>
+                            <p>对外会计账务合规、对内管理账务求真</p>
+                        </div>
+                        <div class="tac-grid-item">
+                            <div class="tac-grid-item-title">权责彻底切割</div>
+                            <p>谁产生风险、谁承担成本、谁享受收益</p>
+                        </div>
+                        <div class="tac-grid-item">
+                            <div class="tac-grid-item-title">周期修正规则</div>
+                            <p>3年行业周期平滑指标，不以单月、单年评价长期资产</p>
+                        </div>
+                        <div class="tac-grid-item">
+                            <div class="tac-grid-item-title">拒绝盲目内卷</div>
+                            <p>放弃低效成本压缩，聚焦工艺溢价、资产效率两条主线</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OP-06: 落地实施 -->
+    <div class="detail-overlay" id="detail-op06">
+        <div class="detail-container">
+            <div class="detail-header">
+                <div class="detail-title-group">
+                    <div class="detail-number">06</div>
+                    <div class="detail-titles">
+                        <div class="detail-code">Deployment Plan</div>
+                        <div class="detail-title">落地实施建议</div>
+                        <div class="detail-subtitle">Implementation Roadmap</div>
+                    </div>
+                </div>
+                <button class="detail-close" onclick="closeDetail()">×</button>
+            </div>
+            <div class="detail-content">
+                <div class="detail-card">
+                    <div class="detail-card-title">执行清单</div>
+                    <div class="step-row">
+                        <div class="step-number">1</div>
+                        <div>
+                            <div class="step-content-title">制度落地</div>
+                            <div class="step-content-desc">固化65元/小时基准加工单价，3年周期内不随意调整</div>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-number">2</div>
+                        <div>
+                            <div class="step-content-title">台账搭建</div>
+                            <div class="step-content-desc">建立管理口径固定资产台账，修正土地补助真实资产成本</div>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-number">3</div>
+                        <div>
+                            <div class="step-content-title">报表重构</div>
+                            <div class="step-content-desc">制造、后市场出具独立经营报表，免费/增值售后完全拆分</div>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-number">4</div>
+                        <div>
+                            <div class="step-content-title">指标优化</div>
+                            <div class="step-content-desc">废除不合理考核，制造考核稼动与工艺能力、售后考核响应与盈利</div>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-number">5</div>
+                        <div>
+                            <div class="step-content-title">数字化沉淀</div>
+                            <div class="step-content-desc">先用Excel搭建全部测算模板，后期迁移至Power BI做可视化看板</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OP-07: 咨询总结 -->
+    <div class="detail-overlay" id="detail-op07">
+        <div class="detail-container">
+            <div class="detail-header">
+                <div class="detail-title-group">
+                    <div class="detail-number">07</div>
+                    <div class="detail-titles">
+                        <div class="detail-code">Mission Summary</div>
+                        <div class="detail-title">咨询总结</div>
+                        <div class="detail-subtitle">Executive Summary | 核心结论</div>
+                    </div>
+                </div>
+                <button class="detail-close" onclick="closeDetail()">×</button>
+            </div>
+            <div class="detail-content">
+                <div class="detail-card" style="background: rgba(0, 120, 215, 0.05); border-color: var(--defender-blue);">
+                    <p class="detail-text" style="font-size: 15px; line-height: 1.8;">本企业本质为<strong>不动产偏重、设备偏轻、劳动密集、非标组装</strong>制造企业；行业红利消退、存量竞争加剧，传统成本管控模式已无优化空间。</p>
+
+                    <div style="background: var(--bg-secondary); border: 1px solid var(--defender-blue); padding: 20px; margin: 20px 0;">
+                        <div style="font-size: 11px; color: var(--defender-blue); letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700; margin-bottom: 10px;">Primary Objective</div>
+                        <p class="detail-text" style="margin: 0;">制造端放弃短期利润考核，重资产看长周期回报，坚定不移走<strong>工艺壁垒或自动化效率</strong>两条路线；后市场拆分双业务，免费售后做质量溯源、增值售后做盈利增长。</p>
+                    </div>
+
+                    <p class="detail-text" style="margin: 0;">财务分析坚持<strong>逻辑优先、工具为辅、权责分明、去伪存真</strong>，剥离账务噪音、还原经营真相，为企业管理层提供客观、公允、可落地的经营决策依据。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        Enterprise Management Division · Operator Profile · CONSULTANT-01<br>
+        <span style="opacity: 0.6;">本文档由会用ai的财务生成，ai改变世界！</span>
+    </footer>
+
+    <!-- ========================================================= -->
+    <!-- JavaScript 交互逻辑 -->
+    <!-- ========================================================= -->
+    <script>
+        // 显示详情面板
+        function showDetail(id) {
+            // 隐藏所有详情
+            document.querySelectorAll('.detail-overlay').forEach(el => {
+                el.classList.remove('active');
+            });
+            // 显示目标详情
+            const target = document.getElementById('detail-' + id);
+            if (target) {
+                target.classList.add('active');
+                // 滚动到顶部
+                target.scrollTop = 0;
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        // 关闭详情面板
+        function closeDetail() {
+            document.querySelectorAll('.detail-overlay').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.body.style.overflow = '';
+        }
+
+        // 导航滚动
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            // 移动端关闭侧边栏
+            document.getElementById('operatorSidebar').classList.remove('open');
+        }
+
+        // 移动端侧边栏切换
+        function toggleSidebar() {
+            document.getElementById('operatorSidebar').classList.toggle('open');
+        }
+
+        // 技能条加载动画
+        function initSkillBars() {
+            const bars = document.querySelectorAll('.skill-bar-fill');
+            bars.forEach(bar => {
+                const width = bar.getAttribute('data-width');
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 300);
+            });
+        }
+
+        // ESC键关闭详情
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeDetail();
+            }
+        });
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initSkillBars();
+        });
+
+        // 导航栏激活状态跟踪
+        window.addEventListener('scroll', () => {
+            const sections = ['operator', 'capabilities', 'operations', 'contact'];
+            const scrollPos = window.scrollY + 100;
+
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    const top = el.offsetTop;
+                    const bottom = top + el.offsetHeight;
+                    const link = document.querySelector(`a[onclick="scrollToSection('${id}')"]`);
+                    if (link) {
+                        if (scrollPos >= top && scrollPos < bottom) {
+                            link.classList.add('active');
+                        } else {
+                            link.classList.remove('active');
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
